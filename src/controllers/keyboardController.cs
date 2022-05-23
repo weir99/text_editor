@@ -2,7 +2,7 @@ namespace Controllers;
 
 using System; using Commands;
 
-class KeyboardController : Controller{
+public class KeyboardController : Controller{
     public override Command getCommand()
     {
         ConsoleKeyInfo cki;
