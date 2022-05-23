@@ -1,3 +1,5 @@
+namespace Controllers;
+using Commands;
 abstract class Controller{
-    public abstract Action getAction();
+    public abstract Command getCommand();
 }

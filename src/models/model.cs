@@ -1,3 +1,7 @@
+namespace Models;
+
+using Views; using Controllers; using Commands;
+
 abstract class Model{
     private List<View> Views = new List<View>();
     private Controller? Controller;
@@ -11,11 +15,11 @@ abstract class Model{
     }
 
     // Gets    
-    protected Action getAction(){
+    protected Command getCommand(){
         if (Controller is null){
-            return new NullAction();
+            return new NullCommand();
         }
-        return Controller.getAction();
+        return Controller.getCommand();
     }
 
     
