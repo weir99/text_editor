@@ -6,6 +6,7 @@ class ConsoleView : View{
 
     public ConsoleView(Document doc){
         this.doc = doc;
+        writeDoc();
     }
 
     public override void update(Update toUpdate)
