@@ -35,6 +35,7 @@ class Document : Model{
         Command c;
         while(live){
             c = getCommand();
+            HandleCommand(c);
         }
     }
 
