@@ -53,5 +53,8 @@ public class Document : Model{
         if (c is KeyCommand) Insert(((KeyCommand) c).cki.KeyChar);
     }
 
+    public void Terminate(){
+        live = false;
+    }
 
 }
