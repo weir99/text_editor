@@ -8,6 +8,6 @@ public class KeyboardController : Controller{
         ConsoleKeyInfo cki;
         if (Console.KeyAvailable) cki = Console.ReadKey(true);
         else return new NullCommand();
-        return new CharCommand(((char)cki.Key));
+        return new KeyCommand(cki);
     }
 }
