@@ -6,11 +6,11 @@ abstract class Model{
     private List<View> Views = new List<View>();
     private Controller? Controller;
 
-    protected virtual void addView(View newView){
+    public virtual void addView(View newView){
         Views.Add(newView);
     }
 
-    protected virtual void addController(Controller newController){
+    public virtual void addController(Controller newController){
         Controller = newController;
     }
 
