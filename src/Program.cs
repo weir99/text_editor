@@ -1,2 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+using Models; using Views; using Controllers;
+Document doc = new Document();
+ConsoleView view = new ConsoleView(doc);
+doc.addView(view);
+KeyboardController controller = new KeyboardController();
+doc.addController(controller);
+doc.Operate();
