@@ -19,6 +19,12 @@ class TestKeyboard : Controller{
         inputs.Enqueue(cki);
     }
 
+    public void writeString(string s){
+        foreach(char c in s){
+            writeChar(c);
+        }
+    }
+
     public void writeChar(char c){
         writeChar(c, false, false, false);
     }

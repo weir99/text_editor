@@ -13,4 +13,13 @@ class TestView : View{
     public char readChar(int x, int y){
         return doc.Text.ElementAt(y)[x];
     }
+
+    public string readLine(int y){
+        return doc.Text.ElementAt(y);
+    }
+
+    public bool lineEmpty(int y){
+        return doc.Text.ElementAtOrDefault(y) is null;
+    }
+
 }
