@@ -7,15 +7,15 @@ using Commands; using Updates;
 
 class Document : Model{
     // Holds the text being edited, may want to change to regular list
-    LinkedList<string> Text {get;}
+    public LinkedList<string> Text {get;private set;}
 
     // Contains information about where editing is taking place
-    Cursor Position {get;}
+    public Cursor Position {get; private set;}
     // Stores current line being worked on, be careful it stays in sync with cursor
-    LinkedListNode<string> CurrentLine {get;}
+    public LinkedListNode<string> CurrentLine {get; private set;}
 
     // Contains the current editing status
-    Status status;
+    public Status status {get; private set;}
 
     // Check if document is currently being viewed/edited
     bool live;
