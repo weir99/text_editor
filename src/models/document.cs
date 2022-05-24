@@ -1,5 +1,5 @@
 namespace Models;
-using Commands;
+using Commands; using Updates;
 
 // Basic document, inherits from model, but shared with our views to make updating easier.
 // Not really ideal implementation of MVC, but better than having a bunch of copies of text
@@ -43,7 +43,7 @@ class Document : Model{
         CurrentLine.Value = CurrentLine.Value.Insert(Position.xPosition, c.ToString());
         // Move cursor one to the right
         ++ (Position.xPosition);
-        updateViews();
+        updateViews(new InsertUpdate());
     }
 
     private void HandleCommand(Command c){

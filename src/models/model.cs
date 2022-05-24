@@ -1,6 +1,6 @@
 namespace Models;
 
-using Views; using Controllers; using Commands;
+using Views; using Controllers; using Commands; using Updates;
 
 abstract class Model{
     private List<View> Views = new List<View>();
