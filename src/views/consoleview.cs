@@ -16,6 +16,7 @@ class ConsoleView : View{
 
     // Writes the entire document, we'll just use this for now
     private void writeDoc(){
+        Console.Clear();
         Console.SetCursorPosition(0, 0);
         if(doc is not null){
             foreach(var Line in doc.Text){
