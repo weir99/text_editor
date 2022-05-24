@@ -5,7 +5,7 @@ using Commands; using Updates;
 // Not really ideal implementation of MVC, but better than having a bunch of copies of text
 // taking up memory
 
-class Document : Model{
+public class Document : Model{
     // Holds the text being edited, may want to change to regular list
     public LinkedList<string> Text {get;private set;}
 

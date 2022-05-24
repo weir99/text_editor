@@ -1,7 +1,7 @@
 namespace Views;
 using Models; using Updates; using System;
 
-class ConsoleView : View{
+public class ConsoleView : View{
     Document? doc;
 
     public ConsoleView(Document doc){

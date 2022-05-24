@@ -1,7 +1,7 @@
 namespace Models;
 
 // Contains info on current editing status, probably going to keep pretty basic for now
-class Status{
+public class Status{
     public const string INSERT_STATUS = "INSERT";
     public const string NORMAL_STATUS = "NORMAL"; 
 

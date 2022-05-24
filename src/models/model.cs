@@ -2,7 +2,7 @@ namespace Models;
 
 using Views; using Controllers; using Commands; using Updates;
 
-abstract class Model{
+public abstract class Model{
     private List<View> Views = new List<View>();
     private Controller? Controller;
 
