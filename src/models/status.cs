@@ -5,8 +5,8 @@ public class Status{
     public const string INSERT_STATUS = "INSERT";
     public const string NORMAL_STATUS = "NORMAL"; 
 
-    private string statDisplay = NORMAL_STATUS;
-    private State stat  = State.Normal;
+    public string statDisplay {get; private set;} = NORMAL_STATUS;
+    public State stat  {get; private set;}= State.Normal;
 
     public void setInsert(){
         statDisplay = INSERT_STATUS; 
@@ -24,7 +24,7 @@ public class Status{
 
 }
 
-enum State{
+public enum State{
     Insert,
     Normal,
     Command
