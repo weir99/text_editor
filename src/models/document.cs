@@ -40,7 +40,10 @@ public class Document : Model{
     }
 
     private void Insert(char c){
-        if (c == 'q') Terminate();
+        if (c == 'q'){ 
+            Terminate();
+            return;
+        }
         // Updates current line
         CurrentLine.Value = CurrentLine.Value.Insert(Position.xPosition, c.ToString());
         // Move cursor one to the right
