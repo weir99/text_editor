@@ -4,8 +4,11 @@ using System; using Commands; using Models;
 
 public class KeyboardController : Controller{
 
-    Status status; //Used to modify command handling based off of status
-
+    public Status status {get; private set;} //Used to modify command handling based off of status
+    public KeyboardController(){
+        status = new Status();
+        status.setInsert(); //We'll just use insert mode for now
+    }
     public KeyboardController(Status status) => this.status = status;
 
     public override Command getCommand()
@@ -18,7 +21,10 @@ public class KeyboardController : Controller{
     }
 
     private Command ProcessKey(ConsoleKeyInfo cki){
-        if(cki.Key == ConsoleKey.Escape) return new NormalCommand();
+        if(cki.Key == ConsoleKey.Escape){
+            status.setNormal();
+            return new NullCommand();
+        }
         else if (status.stat == State.Insert) return ProcessInsert(cki);
         else if (status.stat == State.Command)return ProcessCommand(cki);// Handle command mode
         else return ProcessNormal(cki);

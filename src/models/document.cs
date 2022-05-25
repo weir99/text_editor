@@ -14,9 +14,6 @@ public class Document : Model{
     // Stores current line being worked on, be careful it stays in sync with cursor
     public LinkedListNode<string> CurrentLine {get; private set;}
 
-    // Contains the current editing status
-    public Status status {get; private set;}
-
     // Check if document is currently being viewed/edited
     bool live;
 
@@ -25,8 +22,6 @@ public class Document : Model{
         CurrentLine = new LinkedListNode<string>("");
         Text.AddFirst(CurrentLine);
         Position = new Cursor{xPosition = 0, yPosition = 0};
-        status = new Status();
-        status.setInsert(); //We'll just use insert mode for now
         live = false;
     }
 
@@ -66,10 +61,6 @@ public class Document : Model{
         }
         if (c is NewLineCommand){
             NewLine();
-            return;
-        }
-        if (c is NormalCommand){
-            status.setNormal();
             return;
         }
         if (c is QuitCommand){

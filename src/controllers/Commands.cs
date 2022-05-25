@@ -6,7 +6,6 @@ public class CharCommand : Command{
 
 public class NewLineCommand : Command{}
 
-public class NormalCommand : Command{}
 
 public class BackspaceCommand : Command{}
 

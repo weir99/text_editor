@@ -1,4 +1,4 @@
-namespace Models;
+namespace Controllers;
 
 // Contains info on current editing status, probably going to keep pretty basic for now
 public class Status{
