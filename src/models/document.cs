@@ -57,6 +57,7 @@ public class Document : Model{
         if (c is CharCommand) Insert(((CharCommand)c).c);
         else if (c is NewLineCommand) NewLine();
         else if (c is QuitCommand) Quit();
-        updateViews(new WholeUpdate());
+        else if (c is ViewCommand) updateViews(((ViewCommand)c).update);
+        updateViews(new WholeUpdate()); 
     }
 }
