@@ -25,11 +25,16 @@ public class ConsoleView : View{
                 Console.WriteLine(Line);
             }
         }
+        writeStatus();
+        updateCursor();
+    }
+
+    private void writeStatus(){
         if(state is not null){
             Console.SetCursorPosition(0, Console.WindowHeight);
             Console.Write(state.statDisplay);
         }
-        updateCursor();
+        updateCursor(); 
     }
 
     private void updateCursor(){
