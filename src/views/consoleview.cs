@@ -23,5 +23,10 @@ public class ConsoleView : View{
                 Console.WriteLine(Line);
             }
         }
+        updateCursor();
+    }
+
+    private void updateCursor(){
+        Console.SetCursorPosition(doc.Position.xPosition, doc.Position.yPosition);
     }
 }
