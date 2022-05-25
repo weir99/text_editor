@@ -23,7 +23,7 @@ public class KeyboardController : Controller{
     private Command ProcessKey(ConsoleKeyInfo cki){
         if(cki.Key == ConsoleKey.Escape){
             status.setNormal();
-            return new NullCommand();
+            return new ViewCommand();
         }
         else if (status.stat == State.Insert) return ProcessInsert(cki);
         else if (status.stat == State.Command)return ProcessCommand(cki);// Handle command mode
