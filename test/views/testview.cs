@@ -1,10 +1,14 @@
 namespace TestViews;
-using Views; using Updates; using Models;
+using Views; using Updates; using Models; using Controllers;
 
-class TestView : View{
+public class TestView : View{
     Document doc;
+    Status state;
 
-    public TestView(Document doc) => this.doc = doc;
+    public TestView(Document doc, Status state){
+        this.doc = doc;
+        this.state = state;
+    }
     public override void update(Update toUpdate)
     {
         return; // Not to worried right now, just handling insert

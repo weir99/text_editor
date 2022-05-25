@@ -3,26 +3,14 @@ using TestControllers; using TestViews; using Models;
 
 
 
-public class InsertTest1
+public class InsertTest1 : ToTest
 {
-    Document doc;
-    TestView view;
-    TestKeyboard controller;
-
-    public InsertTest1(){
-        doc = new Document();
-        view = new TestView(doc);
-        controller = new TestKeyboard();
-        doc.addView(view);
-        doc.addController(controller);
-    }
-
     [Fact]
     public void SingleChar()
     {   
         string expected = "c";
         controller.writeString(expected);
-        controller.writeChar('q');
+        controller.Quit();
         doc.Operate();
         string actual = view.readLine(0);
         Assert.Equal(expected, actual);
@@ -34,7 +22,7 @@ public class InsertTest1
     {
         string expected = "Hello World! 123";
         controller.writeString(expected);
-        controller.writeChar('q');
+        controller.Quit();
         doc.Operate();
         string actual = view.readLine(0);
         Assert.Equal(expected, actual);
