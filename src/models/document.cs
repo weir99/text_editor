@@ -40,10 +40,6 @@ public class Document : Model{
     }
 
     private void Insert(char c){
-        if (c == 'q'){ 
-            Terminate();
-            return;
-        }
         // Updates current line
         CurrentLine.Value = CurrentLine.Value.Insert(Position.xPosition, c.ToString());
         // Move cursor one to the right
@@ -51,11 +47,37 @@ public class Document : Model{
         updateViews(new InsertUpdate());
     }
 
+    private void NewLine(){
+        CurrentLine = Text.AddAfter(CurrentLine, "");
+        ++(Position.yPosition);
+        Position.xPosition = 0;
+    }
+
+    private void Quit(){
+        live = false;
+    }
+
     private void HandleCommand(Command c){
         if (c is NullCommand) return;
         // Needs to be more complex, but we'll keep it simple for now
-        if (c is KeyCommand) Insert(((KeyCommand) c).cki.KeyChar);
+        if (c is CharCommand){
+            Insert(((CharCommand)c).c);
+            return;
+        }
+        if (c is NewLineCommand){
+            NewLine();
+            return;
+        }
+        if (c is NormalCommand){
+            status.setNormal();
+            return;
+        }
+        if (c is QuitCommand){
+            Quit();
+            return;
+        }
     }
+
 
     public void Terminate(){
         live = false;
