@@ -39,7 +39,6 @@ public class Document : Model{
         CurrentLine.Value = CurrentLine.Value.Insert(Position.xPosition, c.ToString());
         // Move cursor one to the right
         ++ (Position.xPosition);
-        updateViews(new InsertUpdate());
     }
 
     private void NewLine(){
@@ -55,23 +54,9 @@ public class Document : Model{
     private void HandleCommand(Command c){
         if (c is NullCommand) return;
         // Needs to be more complex, but we'll keep it simple for now
-        if (c is CharCommand){
-            Insert(((CharCommand)c).c);
-            return;
-        }
-        if (c is NewLineCommand){
-            NewLine();
-            return;
-        }
-        if (c is QuitCommand){
-            Quit();
-            return;
-        }
+        if (c is CharCommand) Insert(((CharCommand)c).c);
+        else if (c is NewLineCommand) NewLine();
+        else if (c is QuitCommand) Quit();
+        updateViews(new WholeUpdate());
     }
-
-
-    public void Terminate(){
-        live = false;
-    }
-
 }

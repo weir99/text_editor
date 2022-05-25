@@ -13,7 +13,7 @@ public class ConsoleView : View{
 
     public override void update(Update toUpdate)
     {
-        if(toUpdate is InsertUpdate) writeDoc();
+        if(toUpdate is WholeUpdate) writeDoc();
     }
 
     // Writes the entire document, we'll just use this for now
