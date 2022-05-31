@@ -7,7 +7,7 @@ public class KeyboardController : Controller{
     public Status status {get; private set;} //Used to modify command handling based off of status
     public KeyboardController(){
         status = new Status();
-        status.setInsert(); //We'll just use insert mode for now
+        status.setNormal();
     }
     public KeyboardController(Status status) => this.status = status;
 
