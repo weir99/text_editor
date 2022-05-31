@@ -139,6 +139,9 @@ public class Document : Model{
         else if (c is ViewCommand) updateViews(((ViewCommand)c).update);
         else if (c is MoveCommand) MoveCursor((MoveCommand) c);
         else if (c is BackspaceCommand) Backspace();
+        else if (c is CombinedCommand){
+            foreach(Command command in ((CombinedCommand) c).commands) HandleCommand(command);
+        }
         updateViews(new WholeUpdate()); 
     }
 }

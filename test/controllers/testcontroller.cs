@@ -13,18 +13,19 @@ public class TestController : Controller{
         }
         return new NullCommand();
     }
+    
+    public void move(int moveX, int moveY) => inputs.Enqueue(new MoveCommand(){xMove = moveX, yMove = moveY});
 
-    public void writeChar(char c){
-        inputs.Enqueue(new CharCommand(c));
-    }
+    public void backspace() => inputs.Enqueue(new BackspaceCommand());
+
+    public void writeChar(char c) => inputs.Enqueue(new CharCommand(c));
 
     public void writeNewline(){
         inputs.Enqueue(new NewLineCommand());
     }
 
-    public void Normal(){
-        state.setNormal();
-    }
+    public void Normal() => state.setNormal();
+    public void Insert() => state.setInsert();
 
     public void Quit(){
         inputs.Enqueue(new QuitCommand());
