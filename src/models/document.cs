@@ -51,6 +51,58 @@ public class Document : Model{
         live = false;
     }
 
+    private void MoveCursor(MoveCommand movement){
+        MoveVertical(movement.yMove);
+        MoveHorizontal(movement.xMove);
+    }
+
+    private void MoveVertical(int movement){
+        // Gets direction to move
+        if(movement  == 0) return;
+        int direction;
+        bool movingUp;
+        Func<bool> moveCommand;
+        if(movement > 0){
+            direction = 1;
+            movingUp = false;
+            moveCommand = () =>{
+                if(CurrentLine.Next is null) return false; //Shouldn't happen but just in case
+                CurrentLine = CurrentLine.Next;
+                return true;
+            };
+        } 
+        else if(movement < 0){
+            direction = -1;
+            movingUp = true;
+            moveCommand = () =>{
+                if(CurrentLine.Previous is null) return false; //Shouldn't happen but just in case
+                CurrentLine = CurrentLine.Previous;
+                return true;
+            };
+        }
+        else return;
+
+
+        LinkedListNode<String>? end; //Don't go past this point
+        if(movingUp) end = Text.First;
+        else end = Text.Last;
+        if(end is null) return;
+
+        for(int i = 0; i < Math.Abs(movement); ++i){
+            if(CurrentLine == end) break; //If we have excess move commands, stop moving
+            if(!moveCommand()) break; //If for some reason moveCommand failed, stop moving
+            Position.yPosition += direction;
+        }
+        Position.xPosition = Math.Min(CurrentLine.Value.Length, Position.xPosition);
+    }
+
+    private void MoveHorizontal(int movement){
+        if(movement == 0 ) return;
+        bool movingRight = movement > 0 ? true : false;
+        if(movingRight) Position.xPosition = Math.Min(Position.xPosition + movement, CurrentLine.Value.Length-1);
+        else Position.xPosition = Math.Max(Position.xPosition + movement, 0);
+    }
+
     private void HandleCommand(Command c){
         if (c is NullCommand) return;
         // Needs to be more complex, but we'll keep it simple for now
@@ -58,6 +110,7 @@ public class Document : Model{
         else if (c is NewLineCommand) NewLine();
         else if (c is QuitCommand) Quit();
         else if (c is ViewCommand) updateViews(((ViewCommand)c).update);
+        else if (c is MoveCommand) MoveCursor((MoveCommand) c);
         updateViews(new WholeUpdate()); 
     }
 }
