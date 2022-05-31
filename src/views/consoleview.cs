@@ -33,11 +33,15 @@ public class ConsoleView : View{
         if(state is not null){
             Console.SetCursorPosition(0, Console.WindowHeight);
             Console.Write(state.statDisplay);
+            if(doc is not null){ //Print cursor position for debugging
+                Console.Write("\t");
+                Console.Write($"{doc.Position.xPosition}, {doc.Position.yPosition}");
+            }
         }
         updateCursor(); 
     }
 
     private void updateCursor(){
-        Console.SetCursorPosition(doc.Position.xPosition, doc.Position.yPosition);
+        if(doc is not null) Console.SetCursorPosition(doc.Position.xPosition, doc.Position.yPosition);
     }
 }
