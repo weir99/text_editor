@@ -45,6 +45,18 @@ public class KeyboardController : Controller{
     
     private Command ProcessNormal(ConsoleKeyInfo cki){
         if(cki.KeyChar == 'q') return new QuitCommand();
+        if(cki.KeyChar == 'k') return new MoveCommand{yMove = -1};
+        if(cki.KeyChar == 'j') return new MoveCommand{yMove = 1};
+        if(cki.KeyChar == 'h') return new MoveCommand{xMove = -1};
+        if(cki.KeyChar == 'l') return new MoveCommand{xMove = 1};
+        if(cki.KeyChar == 'i'){
+            status.setInsert();
+            return new ViewCommand();
+        }
+        if(cki.KeyChar == 'a'){
+            status.setInsert();
+            return new CombinedCommand(new MoveCommand{xMove = 1}, new ViewCommand());
+        }
         else return new NullCommand();
     }
 
