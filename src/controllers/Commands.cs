@@ -28,3 +28,17 @@ public class ViewCommand : Command{
         this.update = update;
     }
 }
+
+// Stores multiple commands in a Queue
+public class CombinedCommand : Command{
+    public Queue<Command> commands;
+    public CombinedCommand(){
+        commands = new Queue<Command>();   
+    }
+    public CombinedCommand(params Command[] commands){
+        this.commands = new Queue<Command>();
+        foreach (Command command in commands){
+            this.commands.Enqueue(command);
+        }
+    }
+}
