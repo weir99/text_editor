@@ -17,7 +17,6 @@ public class KeyboardController : Controller{
         if (Console.KeyAvailable) cki = Console.ReadKey(true);
         else return new NullCommand();
         return ProcessKey(cki);
-
     }
 
     private Command ProcessKey(ConsoleKeyInfo cki){
@@ -57,10 +56,32 @@ public class KeyboardController : Controller{
             status.setInsert();
             return new CombinedCommand(new MoveCommand{xMove = 1}, new ViewCommand());
         }
+        if(cki.KeyChar == ':'){
+            status.setCommand(":");
+            return new ViewCommand();
+        }
         else return new NullCommand();
     }
 
     private Command ProcessCommand(ConsoleKeyInfo cki){
-        return new NullCommand();
+        if (cki.Key == ConsoleKey.Enter){
+            string input = status.statDisplay.Remove(0,1);
+            status.setInsert();
+            //Want to send ViewCommand as we updated status
+            return new CombinedCommand(new ViewCommand(), ParseCommand(input));
+        }
+        if (cki.Key == ConsoleKey.Backspace || cki.Key == ConsoleKey.Delete){
+            if(status.statDisplay.Length == 1) status.setNormal();
+            else status.setCommand(status.statDisplay.Remove(status.statDisplay.Length-1));
+        }
+        else{
+            status.setCommand(status.statDisplay + cki.KeyChar);
+        }
+        return new ViewCommand();
+    }
+
+    private Command ParseCommand(String input){
+        if(input == "q") return new QuitCommand();
+        else return new NullCommand();
     }
 }
