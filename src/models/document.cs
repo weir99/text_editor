@@ -10,6 +10,7 @@ public class Document : Model{
     public LinkedList<string> Text {get;private set;}
 
     // Contains information about where editing is taking place
+    // Might want to move over to controller, but this way easy to ensure cursor is always in a valid location
     public Cursor Position {get; private set;}
     // Stores current line being worked on, be careful it stays in sync with cursor
     public LinkedListNode<string> CurrentLine {get; private set;}
@@ -75,7 +76,7 @@ public class Document : Model{
             direction = -1;
             movingUp = true;
             moveCommand = () =>{
-                if(CurrentLine.Previous is null) return false; //Shouldn't happen but just in case
+                if(CurrentLine.Previous is null) throw new InvalidOperationException();
                 CurrentLine = CurrentLine.Previous;
                 return true;
             };
@@ -99,8 +100,34 @@ public class Document : Model{
     private void MoveHorizontal(int movement){
         if(movement == 0 ) return;
         bool movingRight = movement > 0 ? true : false;
-        if(movingRight) Position.xPosition = Math.Min(Position.xPosition + movement, CurrentLine.Value.Length-1);
+        if(movingRight) Position.xPosition = Math.Min(Position.xPosition + movement, CurrentLine.Value.Length);
         else Position.xPosition = Math.Max(Position.xPosition + movement, 0);
+    }
+
+
+    private void Backspace(){
+        //If we're deleting a newline 
+        if(Position.xPosition == 0){
+            //Don't do anything if deleting start of document
+            if(CurrentLine == Text.First) return;
+
+            LinkedListNode<String>? previous = CurrentLine.Previous;
+            if(previous is null) throw new InvalidOperationException();
+            Position.yPosition --;
+            Position.xPosition = previous.Value.Length;
+            (previous.ValueRef) += CurrentLine.Value;
+            Text.Remove(CurrentLine);
+            CurrentLine = previous;
+            return;
+        }
+
+
+        CurrentLine.ValueRef = CurrentLine.Value.Remove(Position.xPosition-1, 1);
+
+        //Adjust cursor if needed
+        Position.xPosition = Math.Min(Position.xPosition, CurrentLine.Value.Length);
+        Position.xPosition = Math.Max(Position.xPosition, 0);
+
     }
 
     private void HandleCommand(Command c){
@@ -111,6 +138,7 @@ public class Document : Model{
         else if (c is QuitCommand) Quit();
         else if (c is ViewCommand) updateViews(((ViewCommand)c).update);
         else if (c is MoveCommand) MoveCursor((MoveCommand) c);
+        else if (c is BackspaceCommand) Backspace();
         updateViews(new WholeUpdate()); 
     }
 }
