@@ -13,10 +13,8 @@ public class KeyboardController : Controller{
 
     public override Command getCommand()
     {
-        ConsoleKeyInfo cki;
-        if (Console.KeyAvailable) cki = Console.ReadKey(true);
-        else return new NullCommand();
-        return ProcessKey(cki);
+        if (Console.KeyAvailable) return ProcessKey(Console.ReadKey(true));
+        return new NullCommand();
     }
 
     private Command ProcessKey(ConsoleKeyInfo cki){
