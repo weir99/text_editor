@@ -1,0 +1,44 @@
+Word Processor
+
+VIM like controls (optional)
+
+Desktop application (mobile as well?)
+	GUI options:
+		dotnet MAUI
+		Avalonia
+
+Let’s focus on logic first, UI can come in later
+
+Should controller controll cursor or document control cursor
+
+	Former option allows multiple controllers, makes more sense for general structure
+
+	However, need to keep controller updated when changes occur that may affect cursor position
+	e.g.
+		If deleting a line, the cursor should move up, if deleting end of line, cursor should move left, if 		deleting in middle of line, cursor should stay the same
+
+	Document could just always tell controller where to put cursor after changes, but then it’s just the 	document controlling the cursor with more steps
+
+	If want to implement, could either have controller have updateCursor doc can call, or have 	reference that cursor passes with command and document should update to new valid position
+
+	If controller wants to put change at invalid cursor location, could either 
+	a) do our best
+		e.g. Create necessary newlines/spaces
+				Assumes controller isn’t sending to negative locations (which it shouldn’t)
+				Could lead to controller to add a lot of unessecary length, would have to be able to 				undo
+	b) send closest valid cursor location to move to
+
+Do/Undo:
+	Right now, document has complete control over how commands are executed, we could move some of 	this over to the commands, having them either do all the work themselves, or at least call the methods
+	that control the document, rather than this big long if of verifying command types.
+
+	Adding new commands would be easier, don’t need to have document check for new command types, 	just execute the command
+
+	Commands need to store info about where they make changes for undo
+	Deletion commands need to store info about what they delete for undo
+
+	Don’t want to undo all commands (e.g. cursor movement), so should make new parent class deciding	dictating the types of commands
+
+	Should controller keep track of the commands that come in and change them, or should document
+
+	Store commands to undo/redo just in stack is pretty straightforward
