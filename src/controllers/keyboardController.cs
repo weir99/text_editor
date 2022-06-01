@@ -3,7 +3,7 @@ namespace Controllers;
 using System; using Commands; using Models;
 
 public class KeyboardController : Controller{
-
+    private string CommandBuffer = ""; //Handles multi-char commands in command and normal mode
     public Status status {get; private set;} //Used to modify command handling based off of status
     public KeyboardController(){
         status = new Status();
@@ -21,6 +21,7 @@ public class KeyboardController : Controller{
 
     private Command ProcessKey(ConsoleKeyInfo cki){
         if(cki.Key == ConsoleKey.Escape){
+            CommandBuffer = "";
             status.setNormal();
             return new ViewCommand();
         }
@@ -43,24 +44,29 @@ public class KeyboardController : Controller{
     }
     
     private Command ProcessNormal(ConsoleKeyInfo cki){
-        if(cki.KeyChar == 'q') return new QuitCommand();
-        if(cki.KeyChar == 'k') return new MoveCommand{yMove = -1};
-        if(cki.KeyChar == 'j') return new MoveCommand{yMove = 1};
-        if(cki.KeyChar == 'h') return new MoveCommand{xMove = -1};
-        if(cki.KeyChar == 'l') return new MoveCommand{xMove = 1};
-        if(cki.KeyChar == 'i'){
+        CommandBuffer += cki.KeyChar;
+        if(CommandBuffer == "k")return ClearBufferAndCommand(new MoveCommand{yMove = -1});
+        if(CommandBuffer == "j") return ClearBufferAndCommand(new MoveCommand{yMove = 1});
+        if(CommandBuffer == "h") return ClearBufferAndCommand(new MoveCommand{xMove = -1});
+        if(CommandBuffer == "l") return ClearBufferAndCommand(new MoveCommand{xMove = 1});
+        if(CommandBuffer == "i"){
             status.setInsert();
-            return new ViewCommand();
+            return ClearBufferAndCommand(new ViewCommand());
         }
-        if(cki.KeyChar == 'a'){
+        if(CommandBuffer == "a"){
             status.setInsert();
-            return new CombinedCommand(new MoveCommand{xMove = 1}, new ViewCommand());
+            return ClearBufferAndCommand(new CombinedCommand(new MoveCommand{xMove = 1}, new ViewCommand()));
         }
-        if(cki.KeyChar == ':'){
+        if(CommandBuffer == ":"){
             status.setCommand(":");
-            return new ViewCommand();
+            return ClearBufferAndCommand(new ViewCommand());
         }
-        else return new NullCommand();
+        else return ClearBufferAndCommand(new NullCommand());
+    }
+
+    private Command ClearBufferAndCommand(Command command){
+        CommandBuffer = "";
+        return command;
     }
 
     private Command ProcessCommand(ConsoleKeyInfo cki){
@@ -68,14 +74,22 @@ public class KeyboardController : Controller{
             string input = status.statDisplay.Remove(0,1);
             status.setInsert();
             //Want to send ViewCommand as we updated status
+            CommandBuffer = "";
             return new CombinedCommand(new ViewCommand(), ParseCommand(input));
         }
         if (cki.Key == ConsoleKey.Backspace || cki.Key == ConsoleKey.Delete){
-            if(status.statDisplay.Length == 1) status.setNormal();
-            else status.setCommand(status.statDisplay.Remove(status.statDisplay.Length-1));
+            if(status.statDisplay.Length == 1)
+            {   status.setNormal();
+                CommandBuffer = ""; //Clear out the COmmandBuffer
+            }
+            else{
+                CommandBuffer = CommandBuffer.Remove(CommandBuffer.Length-1);
+                status.setCommand(":" + CommandBuffer);
+            }
         }
         else{
-            status.setCommand(status.statDisplay + cki.KeyChar);
+            CommandBuffer += cki.KeyChar;
+            status.setCommand(":" + CommandBuffer);
         }
         return new ViewCommand();
     }
