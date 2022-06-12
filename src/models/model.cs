@@ -24,7 +24,7 @@ public abstract class Model{
 
     
     // Update all the views
-    protected virtual void updateViews(Update update){
+    public virtual void updateViews(Update update){
         foreach (View view in Views){
             view.update(update);
         }
