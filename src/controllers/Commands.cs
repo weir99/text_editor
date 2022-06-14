@@ -66,3 +66,12 @@ public class CombinedCommand : Command{
         }
     }
 }
+
+// Tells doc to undo most recent undoable command
+public class ExecuteUndoCommand : DoCommand{
+    public ExecuteUndoCommand(Document doc) : base(doc){}
+    public override void @do()
+    {
+        doc.Undo();
+    }
+}

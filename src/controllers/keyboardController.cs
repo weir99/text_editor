@@ -52,6 +52,7 @@ public class KeyboardController : Controller{
         if(CommandBuffer == "j") return ClearBufferAndCommand(new MoveCommand{yMove = 1});
         if(CommandBuffer == "h") return ClearBufferAndCommand(new MoveCommand{xMove = -1});
         if(CommandBuffer == "l") return ClearBufferAndCommand(new MoveCommand{xMove = 1});
+        if(CommandBuffer == "u") return ClearBufferAndCommand(new ExecuteUndoCommand(doc));
         if(CommandBuffer == "i"){
             status.setInsert();
             return ClearBufferAndCommand(new ViewCommand(doc));

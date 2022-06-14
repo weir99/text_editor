@@ -51,6 +51,13 @@ public class Document : Model{
         Position.xPosition = 0;
     }
 
+    // Undoes command at top of undo stack
+    public void Undo(){
+        UndoCommand? u;
+        // If there's a command to undo, undo it, otherwise do nothing
+        if(Undos.TryPop(out u)) u.undo();
+    }
+
     public void Quit(){
         live = false;
     }
