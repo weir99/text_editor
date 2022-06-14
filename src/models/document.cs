@@ -9,6 +9,8 @@ public class Document : Model{
     // Holds the text being edited, may want to change to regular list
     public LinkedList<string> Text {get;private set;}
 
+    private Stack<UndoCommand> Undos;
+
     // Contains information about where editing is taking place
     // Might want to move over to controller, but this way easy to ensure cursor is always in a valid location
     public Cursor Position {get; private set;}
@@ -20,9 +22,10 @@ public class Document : Model{
 
     public Document(){
         Text = new LinkedList<string>();
+        Undos = new Stack<UndoCommand>();
         CurrentLine = new LinkedListNode<string>("");
         Text.AddFirst(CurrentLine);
-        Position = new Cursor{xPosition = 0, yPosition = 0};
+        Position = new Cursor(0,0);
         live = false;
     }
 
@@ -35,29 +38,54 @@ public class Document : Model{
         }
     }
 
-    private void Insert(char c){
+    public void Insert(char c){
         // Updates current line
         CurrentLine.Value = CurrentLine.Value.Insert(Position.xPosition, c.ToString());
         // Move cursor one to the right
         ++ (Position.xPosition);
     }
 
-    private void NewLine(){
+    public void NewLine(){
         CurrentLine = Text.AddAfter(CurrentLine, "");
         ++(Position.yPosition);
         Position.xPosition = 0;
     }
 
-    private void Quit(){
+    public void Quit(){
         live = false;
     }
+    
+    // Move cursor to given position,
+    // returns true if movement successful, false otherwise
+    public bool MoveTo(Cursor pos){
+        // Check that  we are moving to a valid line
+        if(pos.yPosition < 0 || pos.yPosition >= Text.Count) return false;
 
-    private void MoveCursor(MoveCommand movement){
+        // Don't know how long the desired line is yet, but we do know want position at least 0
+        if(pos.xPosition < 0) return false;
+
+        // If our movement fails, go back to these values;
+        LinkedListNode<string> oldLine = CurrentLine;
+        Cursor oldPos = new Cursor(Position);
+
+        // Move to the desired line
+        MoveVertical(pos.yPosition - Position.yPosition);
+
+        // If we want to move past end of line, return to original values
+        if(pos.xPosition > CurrentLine.Value.Length){
+            CurrentLine = oldLine;
+            Position = oldPos;
+            return false;
+        }
+        MoveHorizontal(pos.xPosition - Position.xPosition);
+        return true;
+    }
+    public void MoveCursor(MoveCommand movement){
         MoveVertical(movement.yMove);
         MoveHorizontal(movement.xMove);
     }
 
-    private void MoveVertical(int movement){
+    public void MoveVertical(int movement){
         // Gets direction to move
         if(movement  == 0) return;
         int direction;
@@ -76,7 +104,7 @@ public class Document : Model{
             direction = -1;
             movingUp = true;
             moveCommand = () =>{
-                if(CurrentLine.Previous is null) throw new InvalidOperationException();
+                if(CurrentLine.Previous is null) return false;
                 CurrentLine = CurrentLine.Previous;
                 return true;
             };
@@ -97,7 +125,7 @@ public class Document : Model{
         Position.xPosition = Math.Min(CurrentLine.Value.Length, Position.xPosition);
     }
 
-    private void MoveHorizontal(int movement){
+    public void MoveHorizontal(int movement){
         if(movement == 0 ) return;
         bool movingRight = movement > 0 ? true : false;
         if(movingRight) Position.xPosition = Math.Min(Position.xPosition + movement, CurrentLine.Value.Length);
@@ -105,7 +133,7 @@ public class Document : Model{
     }
 
 
-    private void Backspace(){
+    public void Backspace(){
         //If we're deleting a newline 
         if(Position.xPosition == 0){
             //Don't do anything if deleting start of document
@@ -130,13 +158,15 @@ public class Document : Model{
 
     }
 
-    private void HandleCommand(Command c){
+    public void HandleCommand(Command c){
         if (c is NullCommand) return;
+        else if (c is DoCommand){
+            if (c is UndoCommand) Undos.Push((UndoCommand) c);
+            ((DoCommand) c).@do();
+        }
         // Needs to be more complex, but we'll keep it simple for now
-        if (c is CharCommand) Insert(((CharCommand)c).c);
-        else if (c is NewLineCommand) NewLine();
+        if (c is NewLineCommand) NewLine();
         else if (c is QuitCommand) Quit();
-        else if (c is ViewCommand) updateViews(((ViewCommand)c).update);
         else if (c is MoveCommand) MoveCursor((MoveCommand) c);
         else if (c is BackspaceCommand) Backspace();
         else if (c is CombinedCommand){
